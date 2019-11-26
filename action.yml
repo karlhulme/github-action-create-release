@@ -10,7 +10,7 @@ inputs:
     required: true
   releaseNotes:
     description: 'A formatted markdown block containing the commit comments since the last release.'
-    required: true
+    required: false
 outputs:
   didRelease:
     description: 'A value of ''yes'' or ''no'' that indicates if a release was successfully created.'

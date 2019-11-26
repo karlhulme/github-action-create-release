@@ -40,7 +40,51 @@ test('Prepare a new release for master.', async () => {
   })
 })
 
-test('Prepare a new release for master but have it failed.', async () => {
+test('Prepare a new release for master with no release notes.', async () => {
+  await expect(run({
+    branchName: 'master',
+    releaseVersion: '1.2.3',
+    owner: 'boss',
+    repo: 'test',
+    getContents,
+    createOrUpdateFile,
+    createRelease
+  })).resolves.toEqual({
+    didRelease: 'yes'
+  })
+})
+
+test('Reject an attempt to prepare a new release with a missing branch name.', async () => {
+  await expect(run({
+    releaseVersion: '1.2.3',
+    releaseNotes: '## Release notes',
+    owner: 'boss',
+    repo: 'test',
+    getContents,
+    createOrUpdateFile,
+    createRelease
+  })).resolves.toEqual({
+    didRelease: 'no',
+    releaseFailureReason: 'Error: Branch name not supplied.'
+  })
+})
+
+test('Reject an attempt to prepare a new release with a missing branch name.', async () => {
+  await expect(run({
+    branchName: 'master',
+    releaseNotes: '## Release notes',
+    owner: 'boss',
+    repo: 'test',
+    getContents,
+    createOrUpdateFile,
+    createRelease
+  })).resolves.toEqual({
+    didRelease: 'no',
+    releaseFailureReason: 'Error: Release version not supplied.'
+  })
+})
+
+test('Prepare a new release for master but have it fail due to a failed github call.', async () => {
   await expect(run({
     branchName: 'master',
     releaseVersion: '1.2.3',
