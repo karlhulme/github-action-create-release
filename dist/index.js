@@ -4799,9 +4799,9 @@ function escape(s) {
  * @param {Object} props The input properties to the github action.
  */
 const run = async ({ branchName, releaseVersion, releaseNotes, owner, repo, getContents, createOrUpdateFile }) => {
-  console.log('made it into the action - trying with refs')
+  console.log('made it into the action')
 
-  const contentsResult = await getContents({ owner, repo, path: 'package.json', ref: 'refs/heads/' + branchName })
+  const contentsResult = await getContents({ owner, repo, path: 'package.json', ref: branchName })
 
   console.log(JSON.stringify(contentsResult.data))
 
