@@ -12,6 +12,8 @@ inputs:
     description: 'A formatted markdown block containing the commit comments since the last release.'
     required: true
 outputs:
+  didRelease:
+    description: 'A value of ''yes'' or ''no'' that indicates if a release was successfully created.'
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -18,6 +18,7 @@ const entryPoint = async () => {
     repo,
     getContents: github.repos.getContents,
     createOrUpdateFile: github.repos.createOrUpdateFile,
+    createRelease: github.repos.createRelease
   }
 
   console.log(`Inputs\n${JSON.stringify(input, null, 2)}\n`)

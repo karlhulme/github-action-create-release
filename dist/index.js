@@ -1621,6 +1621,25 @@ module.exports = opts => {
 
 /***/ }),
 
+/***/ 171:
+/***/ (function(module) {
+
+const createReleaseOnBranch = async (owner, repo, branchName, version, releaseNotes, createRelease) => {
+  await createRelease({
+    owner,
+    repo,
+    tag_name: `v${version}`,
+    target_commitish: branchName,
+    name: `v${version}`,
+    body: releaseNotes
+  })
+}
+
+module.exports = createReleaseOnBranch
+
+
+/***/ }),
+
 /***/ 190:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -4828,19 +4847,21 @@ function escape(s) {
 const fetchPackageJson = __webpack_require__(408)
 const createVersionedPackageJsonContent = __webpack_require__(291)
 const uploadPackageJson = __webpack_require__(870)
+const createReleaseOnBranch = __webpack_require__(171)
 
 /**
  * Runs the Github action and returns a keyed object with values for output.
  * @param {Object} props The input properties to the github action.
  */
-const run = async ({ branchName, releaseVersion, releaseNotes, owner, repo, getContents, createOrUpdateFile }) => {
+const run = async ({ branchName, releaseVersion, releaseNotes, owner, repo, getContents, createOrUpdateFile, createRelease }) => {
   const packageJson = await fetchPackageJson(owner, repo, branchName, getContents)
   const newContent = createVersionedPackageJsonContent(packageJson.content, releaseVersion)
   await uploadPackageJson(owner, repo, branchName, packageJson.sha, newContent, createOrUpdateFile)
+  await createReleaseOnBranch(owner, repo, branchName, releaseVersion, releaseNotes, createRelease)
 
-  // and then create the release with tag and release notes
-
-  return {}
+  return {
+    didRelease: 'yes'
+  }
 }
 
 module.exports = run
@@ -7796,6 +7817,7 @@ const entryPoint = async () => {
     repo,
     getContents: github.repos.getContents,
     createOrUpdateFile: github.repos.createOrUpdateFile,
+    createRelease: github.repos.createRelease
   }
 
   console.log(`Inputs\n${JSON.stringify(input, null, 2)}\n`)

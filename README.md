@@ -14,7 +14,7 @@ The https://github.com/karlhulme/github-action-prepare-release action can be use
 
 ## Outputs
 
-* None
+* **didRelease** - A value of ''yes'' or ''no'' that indicates if a release was successfully created.
 
 ## Example
 
