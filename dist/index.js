@@ -3499,6 +3499,20 @@ function coerce (version) {
 
 /***/ }),
 
+/***/ 291:
+/***/ (function(module) {
+
+const createVersionedPackageJsonContent = (packageJsonContent, version) => {
+  const newContent = JSON.parse(JSON.stringify(packageJsonContent))
+  newContent.version = version
+  return newContent
+}
+
+module.exports = createVersionedPackageJsonContent
+
+
+/***/ }),
+
 /***/ 293:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -4650,6 +4664,23 @@ function Octokit(plugins, options) {
 
 /***/ }),
 
+/***/ 408:
+/***/ (function(module) {
+
+const fetchPackageJson = async (owner, repo, branchName, getContents) => {
+  const contentsResult = await getContents({ owner, repo, path: 'package.json', ref: branchName })
+
+  return {
+    sha: contentsResult.data.sha,
+    content: JSON.parse(Buffer.from(contentsResult.data.content, 'base64').toString('utf8'))
+  }
+}
+
+module.exports = fetchPackageJson
+
+
+/***/ }),
+
 /***/ 413:
 /***/ (function(module) {
 
@@ -4792,18 +4823,22 @@ function escape(s) {
 /***/ }),
 
 /***/ 432:
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const fetchPackageJson = __webpack_require__(408)
+const createVersionedPackageJsonContent = __webpack_require__(291)
+const uploadPackageJson = __webpack_require__(870)
 
 /**
  * Runs the Github action and returns a keyed object with values for output.
  * @param {Object} props The input properties to the github action.
  */
 const run = async ({ branchName, releaseVersion, releaseNotes, owner, repo, getContents, createOrUpdateFile }) => {
-  console.log('made it into the action')
+  const packageJson = await fetchPackageJson(owner, repo, branchName, getContents)
+  const newContent = createVersionedPackageJsonContent(packageJson.content, releaseVersion)
+  await uploadPackageJson(owner, repo, branchName, packageJson.sha, newContent, createOrUpdateFile)
 
-  const contentsResult = await getContents({ owner, repo, path: 'package.json', ref: branchName })
-
-  console.log(JSON.stringify(contentsResult.data))
+  // and then create the release with tag and release notes
 
   return {}
 }
@@ -9534,6 +9569,26 @@ module.exports = function (str) {
 		bin + (arg ? ' ' + arg : '')
 	);
 };
+
+
+/***/ }),
+
+/***/ 870:
+/***/ (function(module) {
+
+const uploadPackageJson = async (owner, repo, branchName, sha, content, createOrUploadFile) => {
+  await createOrUploadFile({
+    owner,
+    repo,
+    path: 'package.json',
+    ref: branchName,
+    sha,
+    content: Buffer.from('new content').toString('base64'),
+    message: '--ignore Updating version in package.json for release.'
+  })
+}
+
+module.exports = uploadPackageJson
 
 
 /***/ }),
