@@ -15,6 +15,7 @@ The https://github.com/karlhulme/github-action-prepare-release action can be use
 ## Outputs
 
 * **didRelease** - A value of ''yes'' or ''no'' that indicates if a release was successfully created.
+* **releaseFailureReason** -- If ''didRelease'' is equal to ''no'' then this property will contain a reason why.
 
 ## Example
 

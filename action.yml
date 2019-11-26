@@ -14,6 +14,8 @@ inputs:
 outputs:
   didRelease:
     description: 'A value of ''yes'' or ''no'' that indicates if a release was successfully created.'
+  releaseFailureReason:
+    description: 'If ''didRelease'' is equal to ''no'' then this property will contain a reason why.'
 runs:
   using: 'node12'
   main: 'dist/index.js'

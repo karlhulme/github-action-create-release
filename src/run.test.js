@@ -39,3 +39,19 @@ test('Prepare a new release for master.', async () => {
     didRelease: 'yes'
   })
 })
+
+test('Prepare a new release for master but have it failed.', async () => {
+  await expect(run({
+    branchName: 'master',
+    releaseVersion: '1.2.3',
+    releaseNotes: '## Release notes',
+    owner: 'boss',
+    repo: 'test',
+    getContents,
+    createOrUpdateFile,
+    createRelease: () => { throw new Error('cannot do it') }
+  })).resolves.toEqual({
+    didRelease: 'no',
+    releaseFailureReason: 'Error: cannot do it'
+  })
+})

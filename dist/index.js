@@ -4878,13 +4878,20 @@ const createReleaseOnBranch = __webpack_require__(171)
  * @param {Object} props The input properties to the github action.
  */
 const run = async ({ branchName, releaseVersion, releaseNotes, owner, repo, getContents, createOrUpdateFile, createRelease }) => {
-  const packageJson = await fetchPackageJson(owner, repo, branchName, getContents)
-  const newContent = createVersionedPackageJsonContent(packageJson.content, releaseVersion)
-  await uploadPackageJson(owner, repo, branchName, packageJson.sha, newContent, createOrUpdateFile)
-  await createReleaseOnBranch(owner, repo, branchName, releaseVersion, releaseNotes, createRelease)
+  try {
+    const packageJson = await fetchPackageJson(owner, repo, branchName, getContents)
+    const newContent = createVersionedPackageJsonContent(packageJson.content, releaseVersion)
+    await uploadPackageJson(owner, repo, branchName, packageJson.sha, newContent, createOrUpdateFile)
+    await createReleaseOnBranch(owner, repo, branchName, releaseVersion, releaseNotes, createRelease)
 
-  return {
-    didRelease: 'yes'
+    return {
+      didRelease: 'yes'
+    }
+  } catch (err) {
+    return {
+      didRelease: 'no',
+      releaseFailureReason: err.toString()
+    }
   }
 }
 
