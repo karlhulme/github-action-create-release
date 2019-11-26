@@ -1,0 +1,20 @@
+name: 'Create Release'
+description: 'Creates a versioned release on a branch.'
+author: 'Karl Hulme'
+inputs:
+  branchName:
+    description: 'The name of the branch that is being targetted for release.'
+    required: true
+  releaseVersion:
+    description: 'The version of the new release in major.minor.patch format.'
+    required: true
+  releaseNotes:
+    description: 'A formatted markdown block containing the commit comments since the last release.'
+    required: true
+outputs:
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'tag'
+  color: 'gray-dark'
