@@ -7,7 +7,7 @@ const createPackageJsonContent = () => ({
   other: 'fields'
 })
 
-test('Compile release notes for just fixes.', async () => {
+test('Create a versioned package json content object', async () => {
   expect(createVersionedPackageJsonContent(createPackageJsonContent(), '1.2.3')).toEqual({
     name: 'testRepo',
     version: '1.2.3',

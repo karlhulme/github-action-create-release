@@ -22,7 +22,7 @@ const getContents = async () => ({
   }
 })
 
-const createOrUpdateFile = async => {}
+const createOrUpdateFile = async () => {}
 const createRelease = async () => {}
 
 test('Prepare a new release for master.', async () => {

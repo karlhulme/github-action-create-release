@@ -22,7 +22,7 @@ const getContents = async () => ({
   }
 })
 
-test('Compile release notes for just fixes.', async () => {
+test('Fetch a package.json object.', async () => {
   const packageJson = await fetchPackageJson('boss', 'testRepo', 'master', getContents)
   expect(packageJson).toHaveProperty('sha', '67bb81cdd491639aa3d696ef60921f97648c29f4')
   expect(packageJson).toHaveProperty('content')
