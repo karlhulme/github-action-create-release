@@ -1624,6 +1624,15 @@ module.exports = opts => {
 /***/ 171:
 /***/ (function(module) {
 
+/**
+ * Creates a release on a branch.
+ * @param {String} owner The owner of the repo.
+ * @param {String} repo The name of the repo.
+ * @param {String} branchName The name of the branch.
+ * @param {String} version A version in the major.minor.patch format.
+ * @param {String} releaseNotes A formatted markdown string of release notes.
+ * @param {Function} createRelease A function that creates a release on github.
+ */
 const createReleaseOnBranch = async (owner, repo, branchName, version, releaseNotes, createRelease) => {
   await createRelease({
     owner,
@@ -3521,6 +3530,13 @@ function coerce (version) {
 /***/ 291:
 /***/ (function(module) {
 
+/**
+ * Creates a new package.json object using the given object
+ * as a starting point and replacing the version with the
+ * given version number.
+ * @param {Object} packageJsonContent A packge.json object.
+ * @param {String} version A version in the major.minor.patch format.
+ */
 const createVersionedPackageJsonContent = (packageJsonContent, version) => {
   const newContent = JSON.parse(JSON.stringify(packageJsonContent))
   newContent.version = version
@@ -4686,6 +4702,14 @@ function Octokit(plugins, options) {
 /***/ 408:
 /***/ (function(module) {
 
+/**
+ * Fetches the contents of the package.json file from
+ * a repo and returns it as a parsed JSON object.
+ * @param {String} owner The owner of a the repo.
+ * @param {String} repo The name of the repo.
+ * @param {String} branchName The name of a branch.
+ * @param {Function} getContents A function that retrieves file contents from github.
+ */
 const fetchPackageJson = async (owner, repo, branchName, getContents) => {
   const contentsResult = await getContents({ owner, repo, path: 'package.json', ref: branchName })
 
@@ -9598,6 +9622,15 @@ module.exports = function (str) {
 /***/ 870:
 /***/ (function(module) {
 
+/**
+ * Uploads a replacement package.json file to github.
+ * @param {String} owner The owner of a the repo.
+ * @param {String} repo The name of the repo.
+ * @param {String} branchName The name of a branch.
+ * @param {String} sha The checksum of the previously downloaded package.json file.
+ * @param {String} content The a package.json object.
+ * @param {Function} createOrUploadFile A function that uploads files to github.
+ */
 const uploadPackageJson = async (owner, repo, branchName, sha, content, createOrUploadFile) => {
   await createOrUploadFile({
     owner,
@@ -9606,7 +9639,7 @@ const uploadPackageJson = async (owner, repo, branchName, sha, content, createOr
     branch: branchName,
     sha,
     content: Buffer.from(JSON.stringify(content, null, 2)).toString('base64'),
-    message: '--ignore Updating version in package.json for release.'
+    message: 'Updating version in package.json for release.'
   })
 }
 
